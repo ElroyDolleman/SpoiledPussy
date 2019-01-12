@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    [Header("Cat Paws")]
     [SerializeField]
     Paw leftPaw;
-
     [SerializeField]
     Paw rightPaw;
+    [SerializeField]
+    float pawSpeed = 60;
+
+
 
     void Start()
     {
@@ -20,7 +24,8 @@ public class GameController : MonoBehaviour
                 Debug.LogError("There is no reference to the right paw");
         }
 
-
+        leftPaw.speed = pawSpeed;
+        rightPaw.speed = pawSpeed;
     }
 
     void Update()

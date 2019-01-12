@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,19 +15,18 @@ public class Paw : MonoBehaviour
 
     public KeyCode keyToGrab;
 
-    public float position { get => transform.position.x; set => transform.position.Set(value, transform.position.y, transform.position.z); }
+    public float position { get => transform.position.x; set => transform.position = new Vector3(value, transform.position.y, transform.position.z); }
 
-    float speed = 1f;
-    float foodPosition = 0;
-    float startPosition = 0;
+    [NonSerialized]
+    public float speed = 1f;
+
+    [NonSerialized]
+    public float foodPosition = 0;
+
+    [NonSerialized]
+    public float startPosition = 0;
 
     PawStates currentState = PawStates.Idle;
-
-    void Initialize(float speed, float foodPosition = 0)
-    {
-        this.speed = speed;
-        this.foodPosition = foodPosition;       
-    }
 
     void Start()
     {
