@@ -6,13 +6,11 @@ public class GameController : MonoBehaviour
 {
     [Header("Cat Paws")]
     [SerializeField]
-    Paw leftPaw;
+    Paw leftPaw = null;
     [SerializeField]
-    Paw rightPaw;
+    Paw rightPaw = null;
     [SerializeField]
     float pawSpeed = 60;
-
-
 
     void Start()
     {
