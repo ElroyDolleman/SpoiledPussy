@@ -74,19 +74,19 @@ public class DishManager : MonoBehaviour
 
         if (leftGrab && !rightGrab)
         {
-            Debug.Log("left got the food");
             servingDish.GrabFood();
             servingDish.Remove();
+            ScoreManager.instance.AddScore(100, true);
         }
         else if (!leftGrab && rightGrab)
         {
-            Debug.Log("right got the food");
             servingDish.GrabFood();
             servingDish.Remove();
+            ScoreManager.instance.AddScore(100, false);
         }
         else if (leftGrab && rightGrab)
         {
-            Debug.Log("No one gets the food");
+            //Debug.Log("No one gets the food");
         }
     }
 
