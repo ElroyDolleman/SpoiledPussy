@@ -12,10 +12,16 @@ public class Dish : MonoBehaviour
         Wait,
         Serve,
         Ready,
+        ShowFood,
         Remove
     }
 
     DishStates currentState = DishStates.Wait;
+
+    [SerializeField]
+    GameObject cover = null;
+    [SerializeField]
+    GameObject food = null;
 
     [NonSerialized]
     public float easing;
@@ -33,10 +39,12 @@ public class Dish : MonoBehaviour
     public float position { get => transform.position.y; set => transform.position = new Vector3(transform.position.x, value, transform.position.z); }
 
     public bool isReady { get => currentState == DishStates.Ready; }
+    public bool foodIsGrabbable { get => currentState == DishStates.ShowFood; }
 
     void Start()
     {
-        
+        if (Debug.isDebugBuild && cover == null)
+            Debug.LogError("There is no reference to the cover of the dish");
     }
 
     void Update()
@@ -50,6 +58,13 @@ public class Dish : MonoBehaviour
                 UpdateRemoving();
                 break;
         }
+    }
+
+    private void ResetDish()
+    {
+        position = start;
+        cover.SetActive(true);
+        food.SetActive(true);
     }
 
     void UpdateServing()
@@ -71,7 +86,7 @@ public class Dish : MonoBehaviour
         if (reachedDestination)
         {
             ChangeState(DishStates.Wait);
-            position = start;
+            ResetDish();
         }
     }
 
@@ -86,6 +101,18 @@ public class Dish : MonoBehaviour
             ChangeState(DishStates.Remove);
     }
 
+    public void ShowFood()
+    {
+        ChangeState(DishStates.ShowFood);
+        cover.SetActive(false);
+    }
+
+    public GameObject GrabFood()
+    {
+        food.SetActive(false);
+        return food;
+    }
+
     bool SmoothMoveTo(float destination)
     {
         float deltaSpeed = speed * Time.fixedDeltaTime;
@@ -93,7 +120,7 @@ public class Dish : MonoBehaviour
 
         transform.Translate(0, diff / speed, 0);
 
-        return position <= destination + 0.001f;
+        return position <= destination + 0.014f;
     }
 
     void ChangeState(DishStates newState)

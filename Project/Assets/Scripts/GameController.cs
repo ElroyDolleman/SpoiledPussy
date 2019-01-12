@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public static GameController instance;
+
     [Header("Cat Paws")]
-    [SerializeField]
-    Paw leftPaw = null;
-    [SerializeField]
-    Paw rightPaw = null;
+
+    public Paw leftPaw = null;
+
+    public Paw rightPaw = null;
     [SerializeField]
     float pawSpeed = 60;
 
@@ -20,7 +22,12 @@ public class GameController : MonoBehaviour
                 Debug.LogError("There is no reference to the left paw");
             if (rightPaw == null)
                 Debug.LogError("There is no reference to the right paw");
+
+            if (instance != null)
+                Debug.LogError("There should only be one instance of the GameController");
         }
+
+        instance = this;
 
         leftPaw.speed = pawSpeed;
         rightPaw.speed = pawSpeed;
@@ -33,5 +40,15 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(rightPaw.keyToGrab))
             rightPaw.Grab();
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            leftPaw.Grab();
+            rightPaw.Grab();
+        }
+
+        // Use a custom update to keep the execution order consistent
+        leftPaw.CustomUpdate();
+        rightPaw.CustomUpdate();
     }
 }

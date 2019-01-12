@@ -21,6 +21,9 @@ public class DishManager : MonoBehaviour
     [SerializeField, Range(0, 10)]
     float maxAnticipationTime = 4f;
 
+    [SerializeField, Range(0, 10), Tooltip("The amount of time the players have to grab the food")]
+    float reactionTime = 1f;
+
     float dishStart = 7f;
     float dishEnd = -7f;
 
@@ -61,9 +64,35 @@ public class DishManager : MonoBehaviour
 
     }
 
+    void LateUpdate()
+    {
+        if (!servingDish.foodIsGrabbable)
+            return;
+
+        bool leftGrab = GameController.instance.leftPaw.canGrabFood;
+        bool rightGrab = GameController.instance.rightPaw.canGrabFood;
+
+        if (leftGrab && !rightGrab)
+        {
+            Debug.Log("left got the food");
+            servingDish.GrabFood();
+            servingDish.Remove();
+        }
+        else if (!leftGrab && rightGrab)
+        {
+            Debug.Log("right got the food");
+            servingDish.GrabFood();
+            servingDish.Remove();
+        }
+        else if (leftGrab && rightGrab)
+        {
+            Debug.Log("No one gets the food");
+        }
+    }
+
     void DishReady()
     {
-        Invoke("ServeNext", Random.Range(minAnticipationTime, maxAnticipationTime));
+        Invoke("ShowFood", Random.Range(minAnticipationTime, maxAnticipationTime));
     }
 
     void SwapDishes()
@@ -79,5 +108,11 @@ public class DishManager : MonoBehaviour
 
         servingDish.Serve();
         waitingDish.Remove();
+    }
+
+    void ShowFood()
+    {
+        servingDish.ShowFood();
+        Invoke("ServeNext", reactionTime);
     }
 }

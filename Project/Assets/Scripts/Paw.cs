@@ -9,6 +9,7 @@ public class Paw : MonoBehaviour
     {
         Idle,
         Grabbing,
+        PickFood,
         PullBack,
         Stun
     }
@@ -16,6 +17,8 @@ public class Paw : MonoBehaviour
     public KeyCode keyToGrab;
 
     public float position { get => transform.position.x; set => transform.position = new Vector3(value, transform.position.y, transform.position.z); }
+
+    public bool canGrabFood { get => currentState == PawStates.PickFood; }
 
     [NonSerialized]
     public float speed = 1f;
@@ -33,12 +36,15 @@ public class Paw : MonoBehaviour
         startPosition = transform.position.x;
     }
 
-    void Update()
+    public void CustomUpdate()
     {
-        switch(currentState)
+        if (currentState == PawStates.PickFood)
+            currentState = PawStates.PullBack;
+
+        switch (currentState)
         {
             case PawStates.Grabbing:
-                MoveTo(foodPosition, PawStates.PullBack);
+                MoveTo(foodPosition, PawStates.PickFood);
                 break;
             case PawStates.PullBack:
                 MoveTo(startPosition, PawStates.Idle);
